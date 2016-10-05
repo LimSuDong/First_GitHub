@@ -24,17 +24,17 @@ public class MidiAssetEditor : Editor
         if(_foldout == true)
         {
             EditorGUI.indentLevel++; // 들여쓰기
-            GUILayout.Label(string.Format("PPQN: {0:d} ", midiAsset.PPQN));
-            GUILayout.Label(string.Format("Pulse: {0:f} sec", midiAsset.pulseTime));
-            GUILayout.Label(string.Format("BPM: {0:d}", midiAsset.BPM));
-            GUILayout.Label(string.Format("Numerator: {0:f1}", midiAsset.numerator));
-            GUILayout.Label(string.Format("denominator: {0:f1}", midiAsset.denominator));
+            EditorGUILayout.LabelField(string.Format("PPQN: {0:d} ", midiAsset.PPQN));
+            EditorGUILayout.LabelField(string.Format("Pulse: {0:f} sec", midiAsset.pulseTime));
+            EditorGUILayout.LabelField(string.Format("BPM: {0:d}", midiAsset.BPM));
+            EditorGUILayout.LabelField(string.Format("Numerator: {0:f1}", midiAsset.numerator));
+            EditorGUILayout.LabelField(string.Format("denominator: {0:f1}", midiAsset.denominator));
             EditorGUI.indentLevel--; // 원상복구
         }
 
         if(GUILayout.Button("Track Viewer"))
         {
-            MidiTrackWindow.ShowWindow();
+            MidiTrackWindow.ShowWindow(midiAsset);
         }
     }
 	

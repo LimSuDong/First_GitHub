@@ -4,18 +4,18 @@ using System.Collections;
 public class MidiAsset : ScriptableObject
 {
     [SerializeField]
-    private MidiFile _midFile;
+    private MidiFile _midiFile;
 
     public void FileLoad(string path)
     {
-        _midFile = new MidiFile(path);
+        _midiFile = new MidiFile(path);
     }
 
     public string fileName
     {
         get
         {
-            return _midFile.FileName;
+            return _midiFile.FileName;
         }
     }
 
@@ -23,7 +23,7 @@ public class MidiAsset : ScriptableObject
     {
         get
         {
-            return (_midFile.Time.Tempo / _midFile.Time.Quarter / 1000000f); // PPQN   //마이크로세컨드 단위 따라서 나누기 1000000f
+            return (_midiFile.Time.Tempo / _midiFile.Time.Quarter / 1000000f); // PPQN   //마이크로세컨드 단위 따라서 나누기 1000000f
         }
     }
 
@@ -31,7 +31,7 @@ public class MidiAsset : ScriptableObject
     {
         get
         {
-            return _midFile.TotalPulses * pulseTime;
+            return _midiFile.TotalPulses * pulseTime;
         }
     }
 
@@ -39,7 +39,7 @@ public class MidiAsset : ScriptableObject
     {
         get
         {
-            return _midFile.Time.Numerator;
+            return _midiFile.Time.Numerator;
         }
     }
 
@@ -47,7 +47,7 @@ public class MidiAsset : ScriptableObject
     {
         get
         {
-            return _midFile.Time.Denominator;
+            return _midiFile.Time.Denominator;
         }
     }
 
@@ -55,7 +55,7 @@ public class MidiAsset : ScriptableObject
     {
         get
         {
-            return _midFile.Time.Quarter;
+            return _midiFile.Time.Quarter;
         }
     }
 
@@ -63,7 +63,15 @@ public class MidiAsset : ScriptableObject
     {
         get
         {
-            return (int)(60000000/_midFile.Time.Tempo);
+            return (int)(60000000/_midiFile.Time.Tempo);
+        }
+    }
+
+    public MidiTrack[] tracks
+    {
+        get
+        {
+            return _midiFile.Tracks.ToArray();
         }
     }
 }
