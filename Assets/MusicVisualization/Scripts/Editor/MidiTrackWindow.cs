@@ -8,7 +8,7 @@ public class MidiTrackWindow : EditorWindow
     //GUI Design
     const float titleHeight = 30;
     const float musicalScaleWidth = 60f;
-    const float TiemHight = 50f;
+    const float timeHeight = 50f;
     const float GridX = 0.5f;
     const float GridY = 30f;
 
@@ -17,7 +17,7 @@ public class MidiTrackWindow : EditorWindow
     private Vector2 _noteAreaScroll;
     private bool[] _enableTracks;
     
-    [MenuItem("Midi/MidTrackWindow")]
+    //[MenuItem("Midi/MidTrackWindow")]
     public static void ShowWindow(MidiAsset midi)
     {
         _midi = midi;
@@ -28,13 +28,13 @@ public class MidiTrackWindow : EditorWindow
     {
         MidiAsset midi = null;
 
-        if(Selection.activeObject != null)
-        {
-            midi = (MidiAsset)Selection.activeObject;           // midi = Selection.activeObject as MidiAsset;(같은표현)
+        //if(Selection.activeObject != null)
+        //{
+        //    midi = (MidiAsset)Selection.activeObject;           // midi = Selection.activeObject as MidiAsset;(같은표현)
 
-        }
+        //}
 
-        if (midi == null)
+        if (_midi == null)
         {
             EditorGUILayout.LabelField("No Midi Asset");
             return;
@@ -52,7 +52,7 @@ public class MidiTrackWindow : EditorWindow
         GUI.EndGroup();
 
         //Draw Create Musical Scale Area
-        rect = new Rect(0, 30, 60, position.height- titleHeight);
+        rect = new Rect(0, titleHeight + timeHeight, musicalScaleWidth, position.height - titleHeight);//30, 60, position.height- titleHeight);
         GUI.Box(rect, "");
         GUI.BeginGroup(rect);
         DrawMusicalScaleArea(rect.width, rect.height);      //내용 그리기
@@ -66,18 +66,18 @@ public class MidiTrackWindow : EditorWindow
         GUILayout.EndArea();
 
         //Draw Create Time Area
-        rect = new Rect(musicalScaleWidth, titleHeight, position.width - position.width * 0.25f - musicalScaleWidth, TiemHight);
+        rect = new Rect(musicalScaleWidth, titleHeight, position.width - position.width * 0.25f - musicalScaleWidth, timeHeight);
         GUI.Box(rect, "");
-        GUILayout.BeginArea(rect);
+        GUI.BeginGroup(rect);
         DrawTimeArea(rect.width, rect.height);      //내용 그리기
-        GUILayout.EndArea();
+        GUI.EndGroup();
 
         //Draw Note Area
-        rect = new Rect(musicalScaleWidth, TiemHight+ titleHeight, position.width - position.width * 0.25f - musicalScaleWidth, position.height- titleHeight - TiemHight);
+        rect = new Rect(musicalScaleWidth, timeHeight + titleHeight, position.width - position.width * 0.25f - musicalScaleWidth, position.height- titleHeight - timeHeight);
         GUI.Box(rect, "");
-        GUILayout.BeginArea(rect);
+        GUI.BeginGroup(rect);
         DrawNoteArea(rect.width, rect.height);    //내용 그리기
-        GUILayout.EndArea();
+        GUI.EndGroup();
 
     }
 
@@ -102,12 +102,17 @@ public class MidiTrackWindow : EditorWindow
 
         GUIStyle style = new GUIStyle(GUI.skin.label);
         style.alignment = TextAnchor.MiddleCenter;
+        style.fontStyle = FontStyle.Italic;
 
-        Rect rect2 = new Rect(0, 0, width, GridY);
-        for (int i= 0; i < 128; i++)
+        int sNote = (int)(_noteAreaScroll.y / GridY);
+        int eNote = (int)((_noteAreaScroll.y + height) / GridY);
+        float sY = -(_noteAreaScroll.y % GridY);
+        Rect rect2 = new Rect(0, sY, width, GridY);
+
+        for (int i = sNote; i <= eNote; i++)
         {
             GUI.Box(rect2, "");
-            GUI.Label(rect2,NoteNumberToString(i), style);
+            GUI.Label(rect2, NoteNumberToString(i), style);
             rect2.y += GridY;
         }
     }
@@ -133,6 +138,61 @@ public class MidiTrackWindow : EditorWindow
 
     void DrawTimeArea(float width, float height)
     {
+        Rect areaRect = new Rect(0, 0, width, height);
+        int sTime = (int)(_noteAreaScroll.x / GridX);
+        int eTime = (int)((_noteAreaScroll.x +width)/ GridX);
+
+        //Draw Text Area
+        GUIStyle style = new GUIStyle(GUI.skin.label);
+        style.alignment = TextAnchor.MiddleLeft;
+        int sText = (int)(sTime / 100);
+        int eText = (int)(eTime / 100);
+        float TextW = GridX * 100;
+        float TextH = height * 0.4f;
+        float TextX = -(_noteAreaScroll.x % TextW);
+        Rect textRect = new Rect(TextX, 0, TextW, TextH);
+        for(int i = sText; i<=eText;i++)
+        {
+            GUI.Label(textRect, string.Format("{0:f1}", i *0.1f), style);
+            textRect.x += TextW;
+        }
+
+        //Draw Line Area
+        int sLine = (int)(sTime / 10);
+        int eLine = (int)(eTime / 10);
+        float lineW = GridX * 10;
+        float lineH = height - TextH;
+        float sLineX = -(_noteAreaScroll.x % lineW);
+        Texture2D lineTexture = new Texture2D(1, 1);
+        lineTexture.SetPixel(0, 0, Color.black);
+        lineTexture.Apply();
+        Rect pixelRect = new Rect(0,0,1,1);
+        int longLineY = (int)TextH;
+        int shortLineY = (int)(longLineY + lineH * 0.5f);
+        int eLineY = (int)height;
+
+
+        for (int i = sLine; i<= eLine; i++)
+        {
+            pixelRect.x = sLineX;
+            if ((i%10) ==0) // Long Line
+            {               
+                for (int j = longLineY; j <= eLineY; j++)
+                {
+                    pixelRect.y = j;
+                    GUI.DrawTexture(pixelRect, lineTexture);
+                }
+            }
+            else // Short Line
+            {
+                for (int j = shortLineY; j <= eLineY; j++)
+                {
+                    pixelRect.y = j;
+                    GUI.DrawTexture(pixelRect, lineTexture);
+                }
+            }
+            sLineX += lineW;
+        }
 
     }
 
