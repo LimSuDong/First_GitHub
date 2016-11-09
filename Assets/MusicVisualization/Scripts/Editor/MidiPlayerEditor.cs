@@ -74,7 +74,7 @@ public class MidiPlayerEditor : Editor
             GUILayout.EndHorizontal();
 
             EditorGUILayout.Slider(midiplayer.playTime, 0f, midiplayer.totalTime);
-            EditorGUILayout.LabelField(string.Format("Time : {0:f1}sec", midiplayer.playTime));
+            EditorGUILayout.LabelField(string.Format("Time : {0:F1}sec", midiplayer.playTime));
         }
     }
 }
