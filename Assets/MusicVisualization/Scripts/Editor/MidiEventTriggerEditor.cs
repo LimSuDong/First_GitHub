@@ -9,150 +9,185 @@ public class MidiEventTriggerEditor : Editor
     private bool foldout = false;
     private bool foldout2 = false;
 
+    SerializedProperty eventNoteOn;
+    SerializedProperty eventNoteOff;
+
     void OnEnable()
     {
-
+        eventNoteOn = serializedObject.FindProperty("eventNoteOn");
+        eventNoteOff = serializedObject.FindProperty("eventNoteOff");
     }
 
     public override void OnInspectorGUI()
     {
+        serializedObject.Update();
+
+        EditorGUILayout.PropertyField(eventNoteOn, new GUIContent("Note On"));
+        EditorGUILayout.PropertyField(eventNoteOff, new GUIContent("Note Off"));
+
+        serializedObject.ApplyModifiedProperties();
+
+
         MidiEventTrigger trigger = (MidiEventTrigger)target;
 
         foldout = EditorGUILayout.Foldout(foldout, "Instrument Filter");
-        if (foldout==true)
+        if (foldout == true)
         {
-            if(GUILayout.Button("Check All"))
+            if (GUILayout.Button("Check All"))
             {
                 for (int i = 0; i < 129; i++)
                     trigger.instrumentFilter[i] = true;
-            }
 
+            }
             if (GUILayout.Button("Clear All"))
             {
                 for (int i = 0; i < 129; i++)
-                    trigger.instrumentFilter[i] = true;
+                    trigger.instrumentFilter[i] = false;
             }
 
             for (int i = 0; i < 129; i++)
             {
-                bool newValue = EditorGUILayout.Toggle(MidiFile.Instruments[i], trigger.instrumentFilter[i]);
-
-                if(newValue != trigger.instrumentFilter[i])
+                bool newValue = GUILayout.Toggle(trigger.instrumentFilter[i], MidiFile.Instruments[i]);
+                if (newValue != trigger.instrumentFilter[i])
                 {
                     trigger.instrumentFilter[i] = newValue;
-                    EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());//이걸해야 씬에 정보가 넘어감
+                    EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
                 }
             }
         }
 
-        foldout2 = EditorGUILayout.Foldout(foldout2, "note Filter");
-        if (foldout2==true)
+        foldout2 = EditorGUILayout.Foldout(foldout2, "Note Filter");
+        if (foldout2 == true)
         {
             if (GUILayout.Button("Check All"))
             {
                 for (int i = 0; i < 128; i++)
                     trigger.noteFilter[i] = true;
-            }
 
+            }
             if (GUILayout.Button("Clear All"))
             {
                 for (int i = 0; i < 128; i++)
-                    trigger.noteFilter[i] = true;
+                    trigger.noteFilter[i] = false;
             }
 
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("C"))
             {
-                for (int i = 0; i < 128; i+=12)                   
-                    trigger.noteFilter[i] = false;
+                for (int i = 0; i < 128; i++)
+                {
+                    if ((int)(i % 12) == 0)
+                        trigger.noteFilter[i] = true;
+                }
             }
-
             if (GUILayout.Button("C#"))
             {
-                for (int i = 1; i < 128; i += 12)
-                    trigger.noteFilter[i] = false;
+                for (int i = 0; i < 128; i++)
+                {
+                    if ((int)(i % 12) == 1)
+                        trigger.noteFilter[i] = true;
+                }
             }
-
             if (GUILayout.Button("D"))
             {
-                for (int i = 2; i < 128; i += 12)
-                    trigger.noteFilter[i] = false;
+                for (int i = 0; i < 128; i++)
+                {
+                    if ((int)(i % 12) == 2)
+                        trigger.noteFilter[i] = true;
+                }
             }
-
             if (GUILayout.Button("D#"))
             {
-                for (int i = 3; i < 128; i += 12)
-                    trigger.noteFilter[i] = false;
+                for (int i = 0; i < 128; i++)
+                {
+                    if ((int)(i % 12) == 3)
+                        trigger.noteFilter[i] = true;
+                }
             }
-
             if (GUILayout.Button("E"))
             {
-                for (int i = 4; i < 128; i += 12)
-                    trigger.noteFilter[i] = false;
+                for (int i = 0; i < 128; i++)
+                {
+                    if ((int)(i % 12) == 4)
+                        trigger.noteFilter[i] = true;
+                }
             }
-
             if (GUILayout.Button("F"))
             {
-                for (int i = 5; i < 128; i += 12)
-                    trigger.noteFilter[i] = false;
+                for (int i = 0; i < 128; i++)
+                {
+                    if ((int)(i % 12) == 5)
+                        trigger.noteFilter[i] = true;
+                }
             }
-
             if (GUILayout.Button("F#"))
             {
-                for (int i = 6; i < 128; i += 12)
-                    trigger.noteFilter[i] = false;
+                for (int i = 0; i < 128; i++)
+                {
+                    if ((int)(i % 12) == 6)
+                        trigger.noteFilter[i] = true;
+                }
             }
-
             if (GUILayout.Button("G"))
             {
-                for (int i = 7; i < 128; i += 12)
-                    trigger.noteFilter[i] = false;
+                for (int i = 0; i < 128; i++)
+                {
+                    if ((int)(i % 12) == 7)
+                        trigger.noteFilter[i] = true;
+                }
             }
-
             if (GUILayout.Button("G#"))
             {
-                for (int i = 8; i < 128; i += 12)
-                    trigger.noteFilter[i] = false;
+                for (int i = 0; i < 128; i++)
+                {
+                    if ((int)(i % 12) == 8)
+                        trigger.noteFilter[i] = true;
+                }
             }
-
             if (GUILayout.Button("A"))
             {
-                for (int i = 9; i < 128; i += 12)
-                    trigger.noteFilter[i] = false;
+                for (int i = 0; i < 128; i++)
+                {
+                    if ((int)(i % 12) == 9)
+                        trigger.noteFilter[i] = true;
+                }
             }
-
             if (GUILayout.Button("A#"))
             {
-                for (int i = 10; i < 128; i += 12)
-                    trigger.noteFilter[i] = false;
+                for (int i = 0; i < 128; i++)
+                {
+                    if ((int)(i % 12) == 10)
+                        trigger.noteFilter[i] = true;
+                }
             }
-
             if (GUILayout.Button("B"))
             {
-                for (int i = 11; i < 128; i += 12)
-                    trigger.noteFilter[i] = false;
+                for (int i = 0; i < 128; i++)
+                {
+                    if ((int)(i % 12) == 11)
+                        trigger.noteFilter[i] = true;
+                }
             }
-
-
+            EditorGUILayout.EndHorizontal();
 
             for (int i = 0; i < 128; i++)
             {
-                bool newValue = EditorGUILayout.Toggle(trigger.noteFilter[i], NoteNumberToString(i));
-
+                bool newValue = GUILayout.Toggle(trigger.noteFilter[i], NoteNumberToString(i));
                 if (newValue != trigger.noteFilter[i])
                 {
                     trigger.noteFilter[i] = newValue;
-                    EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());//이걸해야 씬에 정보가 넘어감
+                    EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
                 }
             }
         }
+
     }
 
     string NoteNumberToString(int number)
     {
         int index = (int)(number % 12);
         int octave = (int)(number / 12);
-        string noteString;
+
 
         switch (index)
         {
@@ -192,10 +227,8 @@ public class MidiEventTriggerEditor : Editor
             case 11:
                 return string.Format("B{0:d}", octave);
 
-            default:
-                return string.Format("UnKnown");
 
         }
-
+        return "Unknown";
     }
 }

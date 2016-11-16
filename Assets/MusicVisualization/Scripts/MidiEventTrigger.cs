@@ -1,22 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Events;
 
 public class MidiEventTrigger : MonoBehaviour {
 
     public bool[] instrumentFilter = new bool[129];
     public bool[] noteFilter = new bool[128];
 
-    private bool _noteOn = false;
+    public UnityEvent eventNoteOn;
+    public UnityEvent eventNoteOff;
 
-    // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    private bool _noteOn = false;
 
     /// <summary>
     /// ///////////////////////////////////////////////////////////////////////////////////////////
@@ -25,6 +19,7 @@ public class MidiEventTrigger : MonoBehaviour {
 
     public void Play()
     {
+        _noteOn = false;
         OnPlay();
     }
 
